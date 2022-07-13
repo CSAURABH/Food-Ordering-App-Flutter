@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:my_food_ordering_app/helpers/screen_navigation.dart';
 import 'package:my_food_ordering_app/helpers/styles.dart';
 import 'package:my_food_ordering_app/models/products.dart';
-import 'package:my_food_ordering_app/screens/details.dart';
 import 'package:my_food_ordering_app/widgets/title.dart';
+
+import '../helpers/screen_navigation.dart';
+import '../screens/details.dart';
 
 class FeaturedProduct extends StatelessWidget {
   const FeaturedProduct({Key? key}) : super(key: key);
