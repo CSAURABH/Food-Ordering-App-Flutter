@@ -1,12 +1,9 @@
-import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:my_food_ordering_app/helpers/styles.dart';
 import 'package:my_food_ordering_app/widgets/categories.dart';
 import 'package:my_food_ordering_app/widgets/featured_products.dart';
 import 'package:my_food_ordering_app/widgets/small_floating_button.dart';
 import 'package:my_food_ordering_app/widgets/title.dart';
-
-var currentPage = 0;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -223,28 +220,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: bottomNavigationBar(),
-    );
-  }
-
-  FancyBottomNavigation bottomNavigationBar() {
-    return FancyBottomNavigation(
-      circleColor: const Color.fromARGB(255, 29, 116, 93),
-      textColor: const Color.fromARGB(255, 29, 116, 93),
-      inactiveIconColor: const Color.fromARGB(255, 29, 116, 93),
-      tabs: [
-        TabData(iconData: Icons.home, title: "Home"),
-        TabData(iconData: Icons.search, title: "Search"),
-        TabData(iconData: Icons.shopping_cart, title: "Cart"),
-        TabData(iconData: Icons.account_circle_outlined, title: "Profile"),
-      ],
-      onTabChangedListener: (position) {
-        setState(
-          () {
-            currentPage = position;
-          },
-        );
-      },
     );
   }
 }

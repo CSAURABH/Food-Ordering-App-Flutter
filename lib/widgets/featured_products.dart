@@ -4,7 +4,7 @@ import 'package:my_food_ordering_app/models/products.dart';
 import 'package:my_food_ordering_app/widgets/title.dart';
 
 import '../helpers/screen_navigation.dart';
-import '../screens/details.dart';
+import '../screens/details_screen.dart';
 
 class FeaturedProduct extends StatelessWidget {
   const FeaturedProduct({Key? key}) : super(key: key);

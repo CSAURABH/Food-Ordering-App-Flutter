@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:my_food_ordering_app/screens/home_page.dart';
+import 'package:my_food_ordering_app/screens/bottom_navigation_Screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.orange,
       ),
-      home: const HomeScreen(),
+      home: const BottomNavigationScreen(),
     );
   }
 }
