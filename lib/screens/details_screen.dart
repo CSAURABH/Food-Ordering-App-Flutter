@@ -20,7 +20,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            Container(
+            SizedBox(
               height: 300,
               child: Stack(
                 children: [
