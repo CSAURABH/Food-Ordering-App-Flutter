@@ -31,7 +31,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
         inactiveIconColor: const Color.fromARGB(255, 29, 116, 93),
         tabs: [
           TabData(iconData: Icons.home, title: "Home"),
-          TabData(iconData: Icons.search, title: "Search"),
+          TabData(iconData: Icons.favorite_outline, title: "Favourites"),
           TabData(iconData: Icons.shopping_cart, title: "Cart"),
           TabData(iconData: Icons.account_circle_outlined, title: "Profile"),
         ],
