@@ -1,8 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:my_food_ordering_app/screens/home_page.dart';
 import 'package:my_food_ordering_app/screens/sign_up_screen.dart';
+
+import 'bottom_navigation_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -28,8 +29,10 @@ class LoginScreen extends StatelessWidget {
             Navigator.popUntil(context, (route) => route.isFirst);
 
             // ignore: use_build_context_synchronously
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => const HomeScreen()));
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const BottomNavigationScreen()));
           }
         } on FirebaseAuthException catch (e) {
           if (e.code == 'user-not-found') {

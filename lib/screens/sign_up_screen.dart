@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -25,16 +26,8 @@ class SignUpScreen extends StatelessWidget {
         Fluttertoast.showToast(msg: "Passward do not match");
       } else {
         try {
-          UserCredential userCredential = await FirebaseAuth.instance
+          await FirebaseAuth.instance
               .createUserWithEmailAndPassword(email: email, password: password);
-
-          if (userCredential.user != null) {
-            // ignore: use_build_context_synchronously
-            Navigator.popUntil(context, (route) => route.isFirst);
-            // ignore: use_build_context_synchronously
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => const LoginScreen()));
-          }
         } on FirebaseAuthException catch (e) {
           if (e.code == 'weak-password') {
             Fluttertoast.showToast(msg: "The Password Provided is to weak");
@@ -44,6 +37,30 @@ class SignUpScreen extends StatelessWidget {
           }
         }
       }
+    }
+
+    sendUserToDB() {
+      String email = emailController.text.trim();
+      String fname = fullNameController.text.trim();
+
+      CollectionReference user = FirebaseFirestore.instance.collection("user");
+
+      return user.doc(email).set(
+        {
+          "Full-Name": fname,
+          "Email-Id": emailController.text,
+        },
+      ).then(
+        (value) => {
+          Navigator.popUntil(context, (route) => route.isFirst),
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const LoginScreen(),
+            ),
+          )
+        },
+      );
     }
 
     return Scaffold(
@@ -195,6 +212,7 @@ class SignUpScreen extends StatelessWidget {
                       ),
                       onPressed: () {
                         singUp();
+                        sendUserToDB();
                       },
                       child: const Text(
                         "Register",

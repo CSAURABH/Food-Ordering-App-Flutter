@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:my_food_ordering_app/screens/bottom_navigation_Screen.dart';
+import 'package:my_food_ordering_app/screens/bottom_navigation_screen.dart';
+import 'package:my_food_ordering_app/screens/splash_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +22,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.orange,
       ),
-      home: const BottomNavigationScreen(),
+      home: (FirebaseAuth.instance.currentUser != null)
+          ? const BottomNavigationScreen()
+          : const SplashScreen(),
     );
   }
 }
