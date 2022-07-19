@@ -204,28 +204,34 @@ import 'package:flutter/material.dart';
 class FeaturedImage extends StatelessWidget {
   final String image;
   final String text;
-  const FeaturedImage({Key? key, required this.image, required this.text})
+  final VoidCallback imageTap;
+  const FeaturedImage(
+      {Key? key,
+      required this.image,
+      required this.text,
+      required this.imageTap})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 3.5),
-      child: Column(
-        children: [
-          Container(
-            child: Image.asset(
+      child: GestureDetector(
+        onTap: imageTap,
+        child: Column(
+          children: [
+            Image.asset(
               image,
               width: 90,
               height: 90,
               fit: BoxFit.cover,
             ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Text(text),
-        ],
+            const SizedBox(
+              height: 10,
+            ),
+            Text(text),
+          ],
+        ),
       ),
     );
   }
