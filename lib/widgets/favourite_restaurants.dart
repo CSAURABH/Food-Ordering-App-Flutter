@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:my_food_ordering_app/helpers/styles.dart';
-import 'package:my_food_ordering_app/widgets/small_floating_button.dart';
 
 class FavouriteRestaurants extends StatelessWidget {
   const FavouriteRestaurants({Key? key}) : super(key: key);
