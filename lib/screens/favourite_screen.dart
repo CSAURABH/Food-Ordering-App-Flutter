@@ -8,41 +8,39 @@ class SearchScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Container(
-        child: Column(
-          children: [
-            DefaultTabController(
-              length: 2,
-              child: Column(
-                children: const [
-                  TabBar(
-                    labelColor: Colors.red,
-                    unselectedLabelColor: Colors.black,
-                    tabs: [
-                      Tab(text: 'Tab 1'),
-                      Tab(text: 'Tab 2'),
+      child: Column(
+        children: [
+          DefaultTabController(
+            length: 2,
+            child: Column(
+              children: const [
+                TabBar(
+                  labelColor: Colors.red,
+                  unselectedLabelColor: Colors.black,
+                  tabs: [
+                    Tab(text: 'Tab 1'),
+                    Tab(text: 'Tab 2'),
+                  ],
+                ),
+                SizedBox(
+                  height: 640,
+                  child: TabBarView(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: FavouriteRestaurants(),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(5.0),
+                        child: FavouriteDishes(),
+                      ),
                     ],
                   ),
-                  SizedBox(
-                    height: 640,
-                    child: TabBarView(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: FavouriteRestaurants(),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(5.0),
-                          child: FavouriteDishes(),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
+                )
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
