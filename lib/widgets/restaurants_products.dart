@@ -35,7 +35,7 @@ class RestaurantProductsState extends State<RestaurantProducts> {
         _dishes.add({
           "image": qn.docs[i]["image"],
           "name": qn.docs[i]["name"],
-          "price": qn.docs[i]["price"]
+          "price": qn.docs[i]["price"],
         });
       }
     });
@@ -130,7 +130,9 @@ class RestaurantProductsState extends State<RestaurantProducts> {
                                           .set({
                                         "name": _dishes[index]["name"],
                                         "price": _dishes[index]["price"],
-                                        "image": _dishes[index]["image"]
+                                        "image": _dishes[index]["image"],
+                                        "restaurant-name":
+                                            widget.restaurants.name,
                                       }).then(
                                         (value) => Fluttertoast.showToast(
                                             msg: "Added to Favourite"),
