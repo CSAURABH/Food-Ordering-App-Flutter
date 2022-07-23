@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:my_food_ordering_app/helpers/styles.dart';
 import 'package:my_food_ordering_app/models/restaurants.dart';
 import 'package:my_food_ordering_app/screens/get_product_by_restaurant.dart';
@@ -70,11 +73,36 @@ class _PopularFoodState extends State<PopularFood> {
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
-                    children: const [
+                    children: [
                       Padding(
-                        padding: EdgeInsets.only(right: 25.0, top: 10),
-                        child: SmallButton(
-                          Icons.favorite,
+                        padding: const EdgeInsets.only(right: 25.0, top: 10),
+                        child: GestureDetector(
+                          onTap: () async {
+                            var currentUser = FirebaseAuth.instance.currentUser;
+                            CollectionReference _collectionRef =
+                                FirebaseFirestore.instance
+                                    .collection("user-favourite-restaurants");
+
+                            return _collectionRef
+                                .doc(currentUser!.email)
+                                .collection("restaurants")
+                                .doc()
+                                .set(
+                              {
+                                "restaurant-name": restaurants![index].name,
+                                "restaurant-dishes": restaurants![index].foods,
+                                "restaurant-image": restaurants![index].image,
+                                "restaurant-ratings":
+                                    restaurants![index].ratings,
+                              },
+                            ).then(
+                              (value) => Fluttertoast.showToast(
+                                  msg: "Added to Favourite"),
+                            );
+                          },
+                          child: const SmallButton(
+                            Icons.favorite,
+                          ),
                         ),
                       ),
                     ],
