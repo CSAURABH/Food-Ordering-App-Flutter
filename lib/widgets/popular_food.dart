@@ -6,7 +6,6 @@ import 'package:my_food_ordering_app/helpers/styles.dart';
 import 'package:my_food_ordering_app/models/restaurants.dart';
 import 'package:my_food_ordering_app/screens/get_product_by_restaurant.dart';
 import 'package:my_food_ordering_app/services/remote_services.dart';
-import 'package:my_food_ordering_app/widgets/small_floating_button.dart';
 
 class PopularFood extends StatefulWidget {
   const PopularFood({Key? key}) : super(key: key);
@@ -32,6 +31,29 @@ class _PopularFoodState extends State<PopularFood> {
         isLoaded = true;
       });
     }
+  }
+
+  Future addToFavouriteRestaurants(int index) {
+    var currentUser = FirebaseAuth.instance.currentUser;
+    // ignore: no_leading_underscores_for_local_identifiers
+    CollectionReference _collectionRef =
+        FirebaseFirestore.instance.collection("user-favourite-restaurants");
+
+    return _collectionRef
+        .doc(currentUser!.email)
+        .collection("restaurants")
+        .doc()
+        .set(
+      {
+        "restaurant-id": restaurants![index].id,
+        "restaurant-name": restaurants![index].name,
+        "restaurant-dishes": restaurants![index].foods,
+        "restaurant-image": restaurants![index].image,
+        "restaurant-ratings": restaurants![index].ratings,
+      },
+    ).then(
+      (value) => Fluttertoast.showToast(msg: "Added to Favourite"),
+    );
   }
 
   @override
@@ -74,37 +96,51 @@ class _PopularFoodState extends State<PopularFood> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 25.0, top: 10),
-                        child: GestureDetector(
-                          onTap: () async {
-                            var currentUser = FirebaseAuth.instance.currentUser;
-                            // ignore: no_leading_underscores_for_local_identifiers
-                            CollectionReference _collectionRef =
-                                FirebaseFirestore.instance
-                                    .collection("user-favourite-restaurants");
-
-                            return _collectionRef
-                                .doc(currentUser!.email)
-                                .collection("restaurants")
-                                .doc()
-                                .set(
-                              {
-                                "restaurant-name": restaurants![index].name,
-                                "restaurant-dishes": restaurants![index].foods,
-                                "restaurant-image": restaurants![index].image,
-                                "restaurant-ratings":
-                                    restaurants![index].ratings,
-                              },
-                            ).then(
-                              (value) => Fluttertoast.showToast(
-                                  msg: "Added to Favourite"),
-                            );
-                          },
-                          child: const SmallButton(
-                            Icons.favorite,
-                          ),
-                        ),
+                      StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection("user-favourite-restaurants")
+                            .doc(FirebaseAuth.instance.currentUser!.email)
+                            .collection("restaurants")
+                            .where("restaurant-id",
+                                isEqualTo: restaurants![index].id)
+                            .snapshots(),
+                        builder:
+                            (BuildContext context, AsyncSnapshot snapshot) {
+                          if (snapshot.data == null) {
+                            return const Text("");
+                          }
+                          return Padding(
+                            padding:
+                                const EdgeInsets.only(right: 25.0, top: 20),
+                            child: Container(
+                              height: 35,
+                              width: 35,
+                              decoration: BoxDecoration(
+                                color: white,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: IconButton(
+                                onPressed: () {
+                                  snapshot.data.docs.length == 0
+                                      ? addToFavouriteRestaurants(index)
+                                      : Fluttertoast.showToast(
+                                          msg: "Already Added");
+                                },
+                                icon: snapshot.data.docs.length == 0
+                                    ? const Icon(
+                                        Icons.favorite_outline,
+                                        color: red,
+                                        size: 20,
+                                      )
+                                    : const Icon(
+                                        Icons.favorite,
+                                        color: Colors.red,
+                                        size: 20,
+                                      ),
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),

@@ -12,18 +12,21 @@ String restaurantsToJson(List<Restaurants> data) =>
 
 class Restaurants {
   Restaurants({
+    required this.id,
     required this.name,
     required this.foods,
     required this.image,
     required this.ratings,
   });
 
+  int id;
   String name;
   String foods;
   String image;
   double ratings;
 
   factory Restaurants.fromJson(Map<String, dynamic> json) => Restaurants(
+        id: json["id"],
         name: json["name"],
         foods: json["foods"],
         image: json["image"],
@@ -31,6 +34,7 @@ class Restaurants {
       );
 
   Map<String, dynamic> toJson() => {
+        "id": id,
         "name": name,
         "foods": foods,
         "image": image,
