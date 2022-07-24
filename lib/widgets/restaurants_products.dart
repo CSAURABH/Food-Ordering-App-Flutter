@@ -41,6 +41,26 @@ class RestaurantProductsState extends State<RestaurantProducts> {
     });
   }
 
+  Future addToFavouriteDishes(int index) {
+    var currentUser = FirebaseAuth.instance.currentUser;
+    // ignore: no_leading_underscores_for_local_identifiers
+    CollectionReference _collectionRef =
+        FirebaseFirestore.instance.collection("user-favourite-dishes");
+
+    return _collectionRef
+        .doc(currentUser!.email)
+        .collection("dishes")
+        .doc()
+        .set({
+      "name": _dishes[index]["name"],
+      "price": _dishes[index]["price"],
+      "image": _dishes[index]["image"],
+      "restaurant-name": widget.restaurants.name,
+    }).then(
+      (value) => Fluttertoast.showToast(msg: "Added to Favourite"),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -101,7 +121,7 @@ class RestaurantProductsState extends State<RestaurantProducts> {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.all(8),
+                              padding: const EdgeInsets.all(1),
                               child: Container(
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(20),
@@ -113,44 +133,50 @@ class RestaurantProductsState extends State<RestaurantProducts> {
                                           offset: Offset(1, 1),
                                           blurRadius: 4),
                                     ]),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: GestureDetector(
-                                    onTap: () async {
-                                      var currentUser =
-                                          FirebaseAuth.instance.currentUser;
-                                      CollectionReference _collectionRef =
-                                          FirebaseFirestore.instance.collection(
-                                              "user-favourite-dishes");
-
-                                      return _collectionRef
-                                          .doc(currentUser!.email)
-                                          .collection("dishes")
-                                          .doc()
-                                          .set({
-                                        "name": _dishes[index]["name"],
-                                        "price": _dishes[index]["price"],
-                                        "image": _dishes[index]["image"],
-                                        "restaurant-name":
-                                            widget.restaurants.name,
-                                      }).then(
-                                        (value) => Fluttertoast.showToast(
-                                            msg: "Added to Favourite"),
-                                      );
-                                    },
-                                    child: const Icon(
-                                      Icons.favorite_border,
-                                      color: red,
-                                      size: 18,
-                                    ),
-                                  ),
+                                child: StreamBuilder(
+                                  stream: FirebaseFirestore.instance
+                                      .collection("user-favourite-dishes")
+                                      .doc(FirebaseAuth
+                                          .instance.currentUser!.email)
+                                      .collection("dishes")
+                                      .where("name",
+                                          isEqualTo: _dishes[index]["name"])
+                                      .snapshots(),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot snapshot) {
+                                    if (snapshot.data == null) {
+                                      return const Text("");
+                                    }
+                                    return Padding(
+                                      padding: const EdgeInsets.all(1.0),
+                                      child: IconButton(
+                                        onPressed: () {
+                                          snapshot.data.docs.length == 0
+                                              ? addToFavouriteDishes(index)
+                                              : Fluttertoast.showToast(
+                                                  msg: "Already Added");
+                                        },
+                                        icon: snapshot.data.docs.length == 0
+                                            ? const Icon(
+                                                Icons.favorite_border,
+                                                color: red,
+                                                size: 18,
+                                              )
+                                            : const Icon(
+                                                Icons.favorite,
+                                                color: Colors.red,
+                                                size: 18,
+                                              ),
+                                      ),
+                                    );
+                                  },
                                 ),
                               ),
                             )
                           ],
                         ),
                         const SizedBox(
-                          height: 25,
+                          height: 15,
                         ),
                         Padding(
                           padding: const EdgeInsets.only(left: 4),

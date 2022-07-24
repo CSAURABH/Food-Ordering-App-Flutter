@@ -12,8 +12,9 @@ class ProfileItems extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      decoration: const BoxDecoration(
-        boxShadow: [
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: const [
           BoxShadow(
             color: Color.fromARGB(255, 214, 217, 216),
             offset: Offset(

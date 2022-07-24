@@ -79,6 +79,7 @@ class _PopularFoodState extends State<PopularFood> {
                         child: GestureDetector(
                           onTap: () async {
                             var currentUser = FirebaseAuth.instance.currentUser;
+                            // ignore: no_leading_underscores_for_local_identifiers
                             CollectionReference _collectionRef =
                                 FirebaseFirestore.instance
                                     .collection("user-favourite-restaurants");
