@@ -54,7 +54,15 @@ class FavouriteRestaurants extends StatelessWidget {
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(20)),
                             child: IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                FirebaseFirestore.instance
+                                    .collection("user-favourite-restaurants")
+                                    .doc(FirebaseAuth
+                                        .instance.currentUser!.email)
+                                    .collection("restaurants")
+                                    .doc(_documentSnapshot.id)
+                                    .delete();
+                              },
                               icon: const Icon(
                                 Icons.delete,
                                 color: Colors.black,

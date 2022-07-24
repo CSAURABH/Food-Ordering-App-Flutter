@@ -18,8 +18,18 @@ class SearchScreen extends StatelessWidget {
                   labelColor: Colors.red,
                   unselectedLabelColor: Colors.black,
                   tabs: [
-                    Tab(text: 'Tab 1'),
-                    Tab(text: 'Tab 2'),
+                    Tab(
+                      child: Text(
+                        "Restaurants",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ),
+                    Tab(
+                      child: Text(
+                        "Dishes",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ),
                   ],
                 ),
                 SizedBox(
@@ -45,35 +55,3 @@ class SearchScreen extends StatelessWidget {
     );
   }
 }
-
-
-// SafeArea(
-//           child: DefaultTabController(
-//             length: 2,
-//             child: TabBar(
-//               indicatorColor: Colors.orange,
-//               unselectedLabelColor: Colors.black,
-//               labelColor: Colors.red,
-//               tabs: [
-//                 Tab(
-//                   child: Text(
-//                     "Restaurants",
-//                     style: TextStyle(
-//                       fontSize: 20,
-//                       fontWeight: FontWeight.bold,
-//                     ),
-//                   ),
-//                 ),
-//                 Tab(
-//                   child: Text(
-//                     "Dishes",
-//                     style: TextStyle(
-//                       fontSize: 20,
-//                       fontWeight: FontWeight.bold,
-//                     ),
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ),

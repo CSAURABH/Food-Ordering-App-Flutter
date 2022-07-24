@@ -88,8 +88,19 @@ class FavouriteDishes extends StatelessWidget {
                                       ),
                                     ],
                                   ),
-                                  child: const Icon(
-                                    Icons.delete,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      FirebaseFirestore.instance
+                                          .collection("user-favourite-dishes")
+                                          .doc(FirebaseAuth
+                                              .instance.currentUser!.email)
+                                          .collection("dishes")
+                                          .doc(_documentSnapshot.id)
+                                          .delete();
+                                    },
+                                    child: const Icon(
+                                      Icons.delete,
+                                    ),
                                   ),
                                 ),
                               ),
