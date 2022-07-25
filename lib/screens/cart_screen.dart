@@ -1,7 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:my_food_ordering_app/helpers/styles.dart';
-import 'package:my_food_ordering_app/models/products.dart';
-import 'package:my_food_ordering_app/widgets/title.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({Key? key}) : super(key: key);
@@ -12,194 +12,156 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
   @override
+  @override
   Widget build(BuildContext context) {
-    Products products = Products(
-        name: "Cereals",
-        image: "1.jpg",
-        rating: 4.7,
-        price: 12.99,
-        vendor: "Good Food",
-        wishList: true);
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: white,
-        elevation: 0.0,
-        centerTitle: true,
-        leading: IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.arrow_back_ios),
-        ),
-        title: const TitleWidget(
-          text: "Item Carts",
-          size: 18,
-          colors: black,
-          weight: FontWeight.bold,
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0),
-            child: Stack(
+      body: SafeArea(
+        child: StreamBuilder(
+          stream: FirebaseFirestore.instance
+              .collection("Cart")
+              .doc(FirebaseAuth.instance.currentUser!.email)
+              .collection("cart-items")
+              .snapshots(),
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (!snapshot.hasData) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            return Column(
               children: [
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.shopping_bag_outlined,
-                    color: black,
-                    size: 30,
+                Container(
+                  height: 520,
+                  child: ListView.builder(
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      // ignore: no_leading_underscores_for_local_identifiers
+                      DocumentSnapshot _documentSnapshot =
+                          snapshot.data!.docs[index];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 5),
+                        child: Container(
+                          height: 100,
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(20),
+                              topLeft: Radius.circular(20),
+                              bottomRight: Radius.circular(20),
+                              topRight: Radius.circular(20),
+                            ),
+                            color: white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color.fromARGB(255, 210, 206, 206),
+                                offset: Offset(3, 5),
+                                blurRadius: 30,
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(
+                                width: 130,
+                                height: 120,
+                                child: ClipRRect(
+                                  borderRadius: const BorderRadius.only(
+                                    bottomLeft: Radius.circular(20),
+                                    topLeft: Radius.circular(20),
+                                  ),
+                                  child: Image.network(
+                                    _documentSnapshot["cart-item-image"],
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                              ),
+                              Column(
+                                children: [
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  Text(
+                                    "${_documentSnapshot["cart-item-name"]}",
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    "Price: ${_documentSnapshot["cart-item-price"]}",
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  Text(
+                                    "qty : ${_documentSnapshot["cart-item-quantity"]}",
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  FirebaseFirestore.instance
+                                      .collection("Cart")
+                                      .doc(FirebaseAuth
+                                          .instance.currentUser!.email)
+                                      .collection("cart-items")
+                                      .doc(_documentSnapshot.id)
+                                      .delete();
+                                },
+                                icon: const Icon(
+                                  Icons.delete,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
-                Positioned(
-                  top: 10,
-                  right: 10,
-                  child: Container(
-                    padding: const EdgeInsets.all(1),
-                    decoration: BoxDecoration(
-                      color: white,
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: grey,
-                          offset: Offset(2, 1),
-                          blurRadius: 3,
-                        ),
-                      ],
+                const SizedBox(
+                  height: 30,
+                ),
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(primary: Colors.orange),
+                  child: const Text(
+                    "Total : 300",
+                    style: TextStyle(
+                      color: black,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
                     ),
-                    child: const TitleWidget(
-                      text: "2",
-                      size: 16,
-                      colors: red,
-                      weight: FontWeight.normal,
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  height: 50,
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(primary: Colors.red),
+                    child: const Text(
+                      "Check Out",
+                      style: TextStyle(
+                        color: white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
               ],
-            ),
-          ),
-        ],
-      ),
-      body: ListView(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              height: 120,
-              decoration: const BoxDecoration(
-                color: white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Color.fromARGB(255, 255, 235, 238),
-                    offset: Offset(3, 5),
-                    blurRadius: 30,
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  Image.asset(
-                    "assets/images/${products.image}",
-                    width: 120,
-                    height: 120,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: "${products.name}\n",
-                              style: const TextStyle(
-                                color: black,
-                                fontSize: 20,
-                              ),
-                            ),
-                            TextSpan(
-                              text: "${products.price.toString()}\n",
-                              style: const TextStyle(
-                                color: black,
-                                fontSize: 17,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 130,
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.delete,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              height: 120,
-              decoration: const BoxDecoration(
-                color: white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Color.fromARGB(255, 255, 235, 238),
-                    offset: Offset(3, 5),
-                    blurRadius: 30,
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  Image.asset(
-                    "assets/images/${products.image}",
-                    width: 120,
-                    height: 120,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: "${products.name}\n",
-                              style: const TextStyle(
-                                color: black,
-                                fontSize: 20,
-                              ),
-                            ),
-                            TextSpan(
-                              text: "${products.price.toString()}\n",
-                              style: const TextStyle(
-                                color: black,
-                                fontSize: 17,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 130,
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.delete,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          )
-        ],
+            );
+          },
+        ),
       ),
     );
   }
