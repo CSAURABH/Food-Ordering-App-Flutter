@@ -11,7 +11,31 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
+  double total = 0.0;
+  double sum = 0.0;
   @override
+  void initState() {
+    FirebaseFirestore.instance
+        .collection("Cart")
+        .doc(FirebaseAuth.instance.currentUser!.email)
+        .collection("cart-items")
+        .get()
+        .then(
+          // ignore: avoid_function_literals_in_foreach_calls
+          (value) => value.docs.forEach(
+            (element) {
+              sum += element.data()["cart-item-price"] *
+                  element.data()["cart-item-quantity"];
+              setState(() {
+                total = sum;
+              });
+            },
+          ),
+        );
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,9 +53,10 @@ class _CartScreenState extends State<CartScreen> {
                 child: CircularProgressIndicator(),
               );
             }
+
             return Column(
               children: [
-                Container(
+                SizedBox(
                   height: 520,
                   child: ListView.builder(
                     itemCount: snapshot.data!.docs.length,
@@ -39,6 +64,7 @@ class _CartScreenState extends State<CartScreen> {
                       // ignore: no_leading_underscores_for_local_identifiers
                       DocumentSnapshot _documentSnapshot =
                           snapshot.data!.docs[index];
+
                       return Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 15, vertical: 5),
@@ -127,19 +153,26 @@ class _CartScreenState extends State<CartScreen> {
                   ),
                 ),
                 const SizedBox(
-                  height: 30,
+                  height: 40,
                 ),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(primary: Colors.orange),
-                  child: const Text(
-                    "Total : 300",
-                    style: TextStyle(
-                      color: black,
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 80),
+                  color: Colors.orange,
+                  height: 50,
+                  width: double.infinity,
+                  child: Center(
+                    child: Text(
+                      "Total : ${total.toStringAsFixed(2)}",
+                      style: const TextStyle(
+                        color: black,
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
+                ),
+                const SizedBox(
+                  height: 15,
                 ),
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 20),

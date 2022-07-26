@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:my_food_ordering_app/helpers/styles.dart';
-import 'package:my_food_ordering_app/screens/bottom_navigation_screen.dart';
 import 'package:my_food_ordering_app/widgets/title.dart';
 
 class DetailsScreen extends StatefulWidget {
@@ -227,13 +226,25 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           Fluttertoast.showToast(msg: "Added To Cart"));
                 },
                 style: ElevatedButton.styleFrom(primary: Colors.red),
-                child: const Text(
-                  "Add to Cart",
-                  style: TextStyle(
-                    color: white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(
+                      Icons.shopping_cart,
+                      color: white,
+                    ),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Text(
+                      "Add to Cart",
+                      style: TextStyle(
+                        color: white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
