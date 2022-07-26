@@ -1,3 +1,4 @@
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,6 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:my_food_ordering_app/helpers/styles.dart';
 import 'package:my_food_ordering_app/widgets/title.dart';
 
+// ignore: must_be_immutable
 class DetailsScreen extends StatefulWidget {
   final String name;
   final String image;

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:my_food_ordering_app/helpers/styles.dart';
+import 'package:my_food_ordering_app/screens/checkout_screen.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({Key? key}) : super(key: key);
@@ -179,7 +180,16 @@ class _CartScreenState extends State<CartScreen> {
                   height: 50,
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CheckOutScreen(
+                            tprice: total,
+                          ),
+                        ),
+                      );
+                    },
                     style: ElevatedButton.styleFrom(primary: Colors.red),
                     child: const Text(
                       "Check Out",
