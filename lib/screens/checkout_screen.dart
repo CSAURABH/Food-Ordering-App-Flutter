@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:my_food_ordering_app/helpers/styles.dart';
+import 'package:my_food_ordering_app/screens/payment_summery.dart';
 
 // ignore: must_be_immutable
 class CheckOutScreen extends StatefulWidget {
@@ -33,7 +34,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
           "Checkout",
           style: TextStyle(
             fontSize: 25,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ),
@@ -150,7 +151,14 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                     width: double.infinity,
                     height: 50,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const PaymentSummeryScreen(),
+                          ),
+                        );
+                      },
                       style: ElevatedButton.styleFrom(primary: Colors.red),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
