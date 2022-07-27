@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:my_food_ordering_app/helpers/styles.dart';
-import 'package:my_food_ordering_app/screens/checkout_screen.dart';
+import 'package:my_food_ordering_app/screens/delivery%20detail/delivery_information_screen.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({Key? key}) : super(key: key);
@@ -181,18 +182,25 @@ class _CartScreenState extends State<CartScreen> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CheckOutScreen(
-                            tprice: total,
+                      if (snapshot.data!.docs.isNotEmpty) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DeliveryInformationScreen(
+                              tprice: total,
+                            ),
                           ),
-                        ),
-                      );
+                        );
+                      } else {
+                        Fluttertoast.showToast(
+                          msg: "The Cart is Empty!",
+                          gravity: ToastGravity.CENTER,
+                        );
+                      }
                     },
                     style: ElevatedButton.styleFrom(primary: Colors.red),
                     child: const Text(
-                      "Check Out",
+                      "Place Order",
                       style: TextStyle(
                         color: white,
                         fontSize: 20,
