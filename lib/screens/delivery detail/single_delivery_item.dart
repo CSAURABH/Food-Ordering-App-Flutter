@@ -35,21 +35,23 @@ class SingleDeliveryItem extends StatelessWidget {
               Text(address),
               Row(
                 children: [
-                  Text(city),
+                  Text(
+                    "$city,",
+                  ),
                   const SizedBox(
                     width: 10,
                   ),
-                  Text(state),
+                  Text("$state,"),
                   const SizedBox(
                     width: 5,
                   ),
-                  Text(" - $pinCode"),
+                  Text("- $pinCode"),
                 ],
               ),
               const SizedBox(
                 height: 5,
               ),
-              Text(" +91 $mobileNo"),
+              Text("+91 $mobileNo"),
             ],
           ),
         ),

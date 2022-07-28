@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:my_food_ordering_app/helpers/styles.dart';
-import 'package:my_food_ordering_app/screens/payment_summery.dart';
 
 // ignore: must_be_immutable
 class AddDeliveryInformationScreen extends StatefulWidget {
@@ -29,43 +28,35 @@ class _CheckOutScreenState extends State<AddDeliveryInformationScreen> {
     TextEditingController pincodeController = TextEditingController();
 
     sendDeliveryInfo() async {
-      // ignore: unrelated_type_equality_checks
-      if (firstNameController.text == "" ||
-          // ignore: unrelated_type_equality_checks
-          lastNameController.text == "" ||
-          // ignore: unrelated_type_equality_checks
-          emailController.text == "" ||
-          // ignore: unrelated_type_equality_checks
-          mobileNoController.text == "" ||
-          // ignore: unrelated_type_equality_checks
-          addressController.text == "" ||
-          // ignore: unrelated_type_equality_checks
-          cityController.text == "" ||
-          // ignore: unrelated_type_equality_checks
-          stateController.text == "" ||
-          // ignore: unrelated_type_equality_checks
-          pincodeController.text == "") {
+      if (firstNameController.text.isEmpty ||
+          lastNameController.text.isEmpty ||
+          emailController.text.isEmpty ||
+          mobileNoController.text.isEmpty ||
+          addressController.text.isEmpty ||
+          cityController.text.isEmpty ||
+          stateController.text.isEmpty ||
+          pincodeController.text.isEmpty) {
         Fluttertoast.showToast(
           msg: "Please fill all the fields!",
           gravity: ToastGravity.CENTER,
         );
       } else {
         CollectionReference customerInfo =
-            FirebaseFirestore.instance.collection("customer-info");
+            FirebaseFirestore.instance.collection("delivery-address");
 
         return customerInfo
             .doc(FirebaseAuth.instance.currentUser!.email)
-            .collection("information")
+            .collection("address-information")
             .doc()
             .set({
-          "First-Name": firstNameController.text,
-          "Last-Name": lastNameController.text,
-          "Email": emailController.text,
-          "Mobile-No": mobileNoController.text,
+          "First-Name": firstNameController.text.trim(),
+          "Last-Name": lastNameController.text.trim(),
+          "Email": emailController.text.trim(),
+          "Mobile-No": mobileNoController.text.trim(),
           "Address": addressController.text,
-          "City/District/Town": cityController.text,
-          "State": cityController.text,
-          "Pin-Code": pincodeController.text
+          "City": cityController.text.trim(),
+          "State": stateController.text.trim(),
+          "Pin-Code": pincodeController.text.trim()
         }).then(
           (value) => Navigator.pop(context),
         );
@@ -122,7 +113,7 @@ class _CheckOutScreenState extends State<AddDeliveryInformationScreen> {
                     height: 5,
                   ),
                   _buildTextFormField(
-                      cityController, context, "City/District/Town"),
+                      cityController, context, "City/Districe/Town"),
                   const SizedBox(
                     height: 5,
                   ),
