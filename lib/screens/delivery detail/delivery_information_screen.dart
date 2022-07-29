@@ -9,9 +9,11 @@ import 'package:my_food_ordering_app/screens/payment_summery/payment_summery.dar
 // ignore: must_be_immutable
 class DeliveryInformationScreen extends StatelessWidget {
   double tprice;
+  QuerySnapshot<Object?>? cartItem;
   DeliveryInformationScreen({
     Key? key,
     required this.tprice,
+    required this.cartItem,
   }) : super(key: key);
 
   QuerySnapshot? current;
@@ -92,6 +94,7 @@ class DeliveryInformationScreen extends StatelessWidget {
                                 builder: (context) => PaymentSummeryScreen(
                                   current: current,
                                   tprice: tprice,
+                                  cItems: cartItem,
                                 ),
                               ),
                             );

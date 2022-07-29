@@ -1,30 +1,24 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:my_food_ordering_app/helpers/styles.dart';
+import 'package:my_food_ordering_app/screens/confirmation_page.dart';
 import 'package:my_food_ordering_app/screens/payment_summery/order_items.dart';
 
 // ignore: must_be_immutable
 class PaymentSummeryScreen extends StatefulWidget {
   double tprice;
   QuerySnapshot<Object?>? current;
+  QuerySnapshot<Object?>? cItems;
   PaymentSummeryScreen({
     Key? key,
     required this.tprice,
     required this.current,
+    required this.cItems,
   }) : super(key: key);
 
   @override
   State<PaymentSummeryScreen> createState() => _PaymentSummeryScreenState();
-}
-
-enum AddressType {
-  // ignore: constant_identifier_names
-  CashOnDelivery,
-  // ignore: constant_identifier_names
-  OnlinePayment,
 }
 
 String? fName;
@@ -35,8 +29,7 @@ String? state;
 String? pinCode;
 
 class _PaymentSummeryScreenState extends State<PaymentSummeryScreen> {
-  var myType = AddressType.CashOnDelivery;
-
+  int myType = 1;
   @override
   Widget build(BuildContext context) {
     double total = widget.tprice + 10.0;
@@ -69,7 +62,12 @@ class _PaymentSummeryScreenState extends State<PaymentSummeryScreen> {
               child: Column(
                 children: [
                   ListTile(
-                    title: Text("${fName!} ${lName!}"),
+                    title: Text(
+                      "${fName!} ${lName!}",
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     //  "Plot No. 112, Pragati Nagar, Ranala, Kamptee, Nagpur, Maharashtra - 441001",
                     subtitle:
                         Text("${address!}, ${city!}, ${state!}, - ${pinCode!}"),
@@ -78,9 +76,9 @@ class _PaymentSummeryScreenState extends State<PaymentSummeryScreen> {
                     height: 25,
                     color: black,
                   ),
-                  const ExpansionTile(
-                    title: Text("Order Item 10"),
-                    children: [
+                  ExpansionTile(
+                    title: Text("Order Item ${widget.cItems!.docs.length}"),
+                    children: const [
                       OrderedItems(),
                     ],
                   ),
@@ -150,12 +148,14 @@ class _PaymentSummeryScreenState extends State<PaymentSummeryScreen> {
                     ),
                   ),
                   RadioListTile(
-                    value: AddressType.CashOnDelivery,
+                    value: 1,
                     groupValue: myType,
-                    onChanged: (AddressType? value) {
-                      setState(() {
-                        myType = value!;
-                      });
+                    onChanged: (value) {
+                      setState(
+                        () {
+                          myType = value as int;
+                        },
+                      );
                     },
                     title: const Text("Cash On Delivery"),
                     secondary: const Icon(
@@ -164,16 +164,18 @@ class _PaymentSummeryScreenState extends State<PaymentSummeryScreen> {
                     ),
                   ),
                   RadioListTile(
-                    value: AddressType.OnlinePayment,
+                    value: 2,
                     groupValue: myType,
-                    onChanged: (AddressType? value) {
-                      setState(() {
-                        myType = value!;
-                      });
+                    onChanged: (value) {
+                      setState(
+                        () {
+                          myType = value as int;
+                        },
+                      );
                     },
                     title: const Text("Online Payment"),
                     secondary: const Icon(
-                      Icons.home,
+                      Icons.wallet,
                       color: Colors.orange,
                     ),
                   ),
@@ -183,29 +185,41 @@ class _PaymentSummeryScreenState extends State<PaymentSummeryScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: ListTile(
-        title: const Text("Total Amount"),
-        subtitle: Text(
-          "\$ ${total.toStringAsFixed(2)}",
-          style: TextStyle(
-            color: Colors.green[900],
-            fontWeight: FontWeight.bold,
-            fontSize: 17,
-          ),
-        ),
-        trailing: SizedBox(
-          width: 200,
-          child: MaterialButton(
-            onPressed: () {},
-            color: Colors.orange,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30),
+      bottomNavigationBar: Container(
+        margin: const EdgeInsets.only(bottom: 20, left: 10, right: 10),
+        child: ListTile(
+          title: const Text("Total Amount"),
+          subtitle: Text(
+            "\$ ${total.toStringAsFixed(2)}",
+            style: TextStyle(
+              color: Colors.green[900],
+              fontWeight: FontWeight.bold,
+              fontSize: 17,
             ),
-            child: const Text(
-              "Place Order",
-              style: TextStyle(
-                color: black,
-                fontSize: 18,
+          ),
+          trailing: SizedBox(
+            width: 200,
+            child: MaterialButton(
+              onPressed: () {
+                if (myType == 1) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ConfirmationScreen(),
+                    ),
+                  );
+                } else {}
+              },
+              color: Colors.orange,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: const Text(
+                "Place Order",
+                style: TextStyle(
+                  color: black,
+                  fontSize: 18,
+                ),
               ),
             ),
           ),

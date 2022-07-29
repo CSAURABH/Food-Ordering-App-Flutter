@@ -38,6 +38,8 @@ class _CartScreenState extends State<CartScreen> {
     super.initState();
   }
 
+  QuerySnapshot? items;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,6 +52,7 @@ class _CartScreenState extends State<CartScreen> {
               .snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            items = snapshot.data;
             if (!snapshot.hasData) {
               return const Center(
                 child: CircularProgressIndicator(),
@@ -155,7 +158,7 @@ class _CartScreenState extends State<CartScreen> {
                   ),
                 ),
                 const SizedBox(
-                  height: 40,
+                  height: 15,
                 ),
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 80),
@@ -177,7 +180,9 @@ class _CartScreenState extends State<CartScreen> {
                   height: 15,
                 ),
                 Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                  ),
                   height: 50,
                   width: double.infinity,
                   child: ElevatedButton(
@@ -188,6 +193,7 @@ class _CartScreenState extends State<CartScreen> {
                           MaterialPageRoute(
                             builder: (context) => DeliveryInformationScreen(
                               tprice: total,
+                              cartItem: items,
                             ),
                           ),
                         );
