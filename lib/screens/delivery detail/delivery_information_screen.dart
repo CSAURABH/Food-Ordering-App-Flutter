@@ -14,6 +14,8 @@ class DeliveryInformationScreen extends StatelessWidget {
     required this.tprice,
   }) : super(key: key);
 
+  QuerySnapshot? current;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,6 +36,7 @@ class DeliveryInformationScreen extends StatelessWidget {
             .collection("address-information")
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          current = snapshot.data;
           if (!snapshot.hasData) {
             return const Center(
               child: CircularProgressIndicator(),
@@ -63,6 +66,7 @@ class DeliveryInformationScreen extends StatelessWidget {
                             children: [
                               SingleDeliveryItem(
                                 title: _documentSnapshot["First-Name"] +
+                                    " " +
                                     _documentSnapshot["Last-Name"],
                                 address: _documentSnapshot["Address"],
                                 city: _documentSnapshot["City"],
@@ -81,12 +85,12 @@ class DeliveryInformationScreen extends StatelessWidget {
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () {
-                          final data = snapshot.data!.docs;
                           if (snapshot.data!.docs.isNotEmpty) {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => PaymentSummeryScreen(
+                                  current: current,
                                   tprice: tprice,
                                 ),
                               ),

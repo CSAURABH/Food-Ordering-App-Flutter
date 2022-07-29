@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:my_food_ordering_app/helpers/styles.dart';
@@ -6,21 +9,11 @@ import 'package:my_food_ordering_app/screens/payment_summery/order_items.dart';
 // ignore: must_be_immutable
 class PaymentSummeryScreen extends StatefulWidget {
   double tprice;
-  // String fName;
-  // String lName;
-  // String address;
-  // String city;
-  // String state;
-  // String pinCode;
+  QuerySnapshot<Object?>? current;
   PaymentSummeryScreen({
     Key? key,
     required this.tprice,
-    // required this.fName,
-    // required this.lName,
-    // required this.address,
-    // required this.city,
-    // required this.state,
-    // required this.pinCode,
+    required this.current,
   }) : super(key: key);
 
   @override
@@ -34,11 +27,29 @@ enum AddressType {
   OnlinePayment,
 }
 
+String? fName;
+String? lName;
+String? address;
+String? city;
+String? state;
+String? pinCode;
+
 class _PaymentSummeryScreenState extends State<PaymentSummeryScreen> {
   var myType = AddressType.CashOnDelivery;
+
   @override
   Widget build(BuildContext context) {
     double total = widget.tprice + 10.0;
+
+    for (var post in widget.current!.docs) {
+      fName = post["First-Name"];
+      lName = post["Last-Name"];
+      address = post["Address"];
+      city = post["City"];
+      state = post["State"];
+      pinCode = post["Pin-Code"];
+    }
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -57,11 +68,11 @@ class _PaymentSummeryScreenState extends State<PaymentSummeryScreen> {
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: [
-                  const ListTile(
-                    title: Text("Saurabh Chachere"),
-                    subtitle: Text(
-                      "Plot No. 112, Pragati Nagar, Ranala, Kamptee, Nagpur, Maharashtra - 441001",
-                    ),
+                  ListTile(
+                    title: Text("${fName!} ${lName!}"),
+                    //  "Plot No. 112, Pragati Nagar, Ranala, Kamptee, Nagpur, Maharashtra - 441001",
+                    subtitle:
+                        Text("${address!}, ${city!}, ${state!}, - ${pinCode!}"),
                   ),
                   const Divider(
                     height: 25,
@@ -183,7 +194,7 @@ class _PaymentSummeryScreenState extends State<PaymentSummeryScreen> {
           ),
         ),
         trailing: SizedBox(
-          width: 160,
+          width: 200,
           child: MaterialButton(
             onPressed: () {},
             color: Colors.orange,
@@ -194,6 +205,7 @@ class _PaymentSummeryScreenState extends State<PaymentSummeryScreen> {
               "Place Order",
               style: TextStyle(
                 color: black,
+                fontSize: 18,
               ),
             ),
           ),
