@@ -11,7 +11,7 @@ import 'package:my_food_ordering_app/widgets/title.dart';
 class DetailsScreen extends StatefulWidget {
   final String name;
   final String image;
-  double price;
+  int price;
 
   DetailsScreen({
     Key? key,

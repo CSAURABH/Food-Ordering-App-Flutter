@@ -13,8 +13,8 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
-  double total = 0.0;
-  double sum = 0.0;
+  num total = 0;
+  num sum = 0;
   @override
   void initState() {
     FirebaseFirestore.instance
@@ -167,7 +167,7 @@ class _CartScreenState extends State<CartScreen> {
                   width: double.infinity,
                   child: Center(
                     child: Text(
-                      "Total : ${total.toStringAsFixed(2)}",
+                      "Total : $total",
                       style: const TextStyle(
                         color: black,
                         fontSize: 15,

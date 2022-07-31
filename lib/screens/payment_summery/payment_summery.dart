@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:my_food_ordering_app/helpers/styles.dart';
 import 'package:my_food_ordering_app/screens/confirmation_page.dart';
 import 'package:my_food_ordering_app/screens/payment_summery/order_items.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 // ignore: must_be_immutable
 class PaymentSummeryScreen extends StatefulWidget {
-  double tprice;
+  num tprice;
   QuerySnapshot<Object?>? current;
   QuerySnapshot<Object?>? cItems;
   PaymentSummeryScreen({
@@ -27,12 +28,66 @@ String? address;
 String? city;
 String? state;
 String? pinCode;
+String? email;
+String? mNumber;
 
 class _PaymentSummeryScreenState extends State<PaymentSummeryScreen> {
+  late Razorpay _razorpay;
+
+  @override
+  void initState() {
+    super.initState();
+    initializeRAzorPay();
+  }
+
+  void initializeRAzorPay() {
+    _razorpay = Razorpay();
+    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+  }
+
+  void launchRazorPay({amount}) {
+    var options = {
+      'key': 'rzp_test_vaCwf9jHxQAW8f',
+      'amount': amount * 100, //in the smallest currency sub-unit.
+      'name': 'Saurabh Chachere',
+      'description': 'Zomato',
+      'timeout': 300, // in seconds
+      'prefill': {'contact': '123456782', 'email': 'chacheresaurabh@gmail.com'}
+    };
+    try {
+      _razorpay.open(options);
+    } catch (e) {
+      // ignore: avoid_print
+      print("Error : $e");
+    }
+  }
+
+  void _handlePaymentSuccess(PaymentSuccessResponse response) {
+    // ignore: avoid_print
+    print("Payment Successful");
+    // ignore: avoid_print
+    print(
+        "${response.orderId} \n ${response.paymentId} \n ${response.signature}");
+  }
+
+  void _handlePaymentError(PaymentFailureResponse response) {
+    // ignore: avoid_print
+    print("Payment Faild");
+    // ignore: avoid_print
+    print("${response.code} \n${response.message}");
+  }
+
+  void _handleExternalWallet(ExternalWalletResponse response) {
+    // ignore: avoid_print
+    print("Payment Faild");
+  }
+
   int myType = 1;
   @override
   Widget build(BuildContext context) {
-    double total = widget.tprice + 10.0;
+    num total = widget.tprice + 10;
 
     for (var post in widget.current!.docs) {
       fName = post["First-Name"];
@@ -41,6 +96,8 @@ class _PaymentSummeryScreenState extends State<PaymentSummeryScreen> {
       city = post["City"];
       state = post["State"];
       pinCode = post["Pin-Code"];
+      email = post["Email"];
+      mNumber = post["Mobile-No"];
     }
 
     return Scaffold(
@@ -95,7 +152,7 @@ class _PaymentSummeryScreenState extends State<PaymentSummeryScreen> {
                       ),
                     ),
                     trailing: Text(
-                      "\$ ${widget.tprice.toStringAsFixed(2)}",
+                      "\$ ${widget.tprice}",
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -127,7 +184,7 @@ class _PaymentSummeryScreenState extends State<PaymentSummeryScreen> {
                       ),
                     ),
                     trailing: Text(
-                      "\$ ${total.toStringAsFixed(2)}",
+                      "\$ $total",
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -190,7 +247,7 @@ class _PaymentSummeryScreenState extends State<PaymentSummeryScreen> {
         child: ListTile(
           title: const Text("Total Amount"),
           subtitle: Text(
-            "\$ ${total.toStringAsFixed(2)}",
+            "\$ $total",
             style: TextStyle(
               color: Colors.green[900],
               fontWeight: FontWeight.bold,
@@ -199,16 +256,27 @@ class _PaymentSummeryScreenState extends State<PaymentSummeryScreen> {
           ),
           trailing: SizedBox(
             width: 200,
+            height: 50,
             child: MaterialButton(
               onPressed: () {
                 if (myType == 1) {
-                  Navigator.push(
+                  Navigator.popUntil(context, (route) => route.isFirst);
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                       builder: (context) => const ConfirmationScreen(),
                     ),
                   );
-                } else {}
+                } else {
+                  launchRazorPay(amount: total);
+                }
+                Navigator.popUntil(context, (route) => route.isFirst);
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ConfirmationScreen(),
+                  ),
+                );
               },
               color: Colors.orange,
               shape: RoundedRectangleBorder(

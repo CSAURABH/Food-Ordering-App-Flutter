@@ -15,16 +15,25 @@ class BottomNavigationScreen extends StatefulWidget {
 }
 
 class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
-  final _screens = [
-    const HomeScreen(),
-    const SearchScreen(),
-    const CartScreen(),
-    const ProfileScreen(),
-  ];
+  // final _screens = [
+  //   const HomeScreen(),
+  //   const SearchScreen(),
+  //   const CartScreen(),
+  //   const ProfileScreen(),
+  // ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      body: IndexedStack(
+        index: currentPage,
+        children: const [
+          HomeScreen(),
+          SearchScreen(),
+          CartScreen(),
+          ProfileScreen(),
+        ],
+      ),
       bottomNavigationBar: FancyBottomNavigation(
         circleColor: const Color.fromARGB(255, 29, 116, 93),
         textColor: const Color.fromARGB(255, 29, 116, 93),
@@ -43,7 +52,6 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
           );
         },
       ),
-      body: _screens[currentPage],
     );
   }
 }

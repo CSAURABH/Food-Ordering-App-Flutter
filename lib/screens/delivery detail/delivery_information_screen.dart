@@ -8,7 +8,7 @@ import 'package:my_food_ordering_app/screens/payment_summery/payment_summery.dar
 
 // ignore: must_be_immutable
 class DeliveryInformationScreen extends StatelessWidget {
-  double tprice;
+  num tprice;
   QuerySnapshot<Object?>? cartItem;
   DeliveryInformationScreen({
     Key? key,
