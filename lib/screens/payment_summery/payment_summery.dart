@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:my_food_ordering_app/helpers/styles.dart';
-import 'package:my_food_ordering_app/screens/confirmation_page.dart';
 import 'package:my_food_ordering_app/screens/payment_summery/order_items.dart';
+import 'package:my_food_ordering_app/widgets/loading.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 // ignore: must_be_immutable
@@ -70,6 +70,13 @@ class _PaymentSummeryScreenState extends State<PaymentSummeryScreen> {
     // ignore: avoid_print
     print(
         "${response.orderId} \n ${response.paymentId} \n ${response.signature}");
+    Navigator.popUntil(context, (route) => route.isFirst);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const LoadingScreen(),
+      ),
+    );
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
@@ -264,19 +271,12 @@ class _PaymentSummeryScreenState extends State<PaymentSummeryScreen> {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const ConfirmationScreen(),
+                      builder: (context) => const LoadingScreen(),
                     ),
                   );
                 } else {
                   launchRazorPay(amount: total);
                 }
-                Navigator.popUntil(context, (route) => route.isFirst);
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const ConfirmationScreen(),
-                  ),
-                );
               },
               color: Colors.orange,
               shape: RoundedRectangleBorder(

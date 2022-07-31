@@ -14,7 +14,7 @@ class _OrderedItemsState extends State<OrderedItems> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 450,
+      height: 150,
       child: StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection("Cart")

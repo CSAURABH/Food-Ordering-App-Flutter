@@ -5,8 +5,6 @@ import 'package:my_food_ordering_app/screens/home_screen.dart';
 import 'package:my_food_ordering_app/screens/profile_screen.dart';
 import 'package:my_food_ordering_app/screens/favourite_screen.dart';
 
-var currentPage = 0;
-
 class BottomNavigationScreen extends StatefulWidget {
   const BottomNavigationScreen({Key? key}) : super(key: key);
 
@@ -15,12 +13,7 @@ class BottomNavigationScreen extends StatefulWidget {
 }
 
 class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
-  // final _screens = [
-  //   const HomeScreen(),
-  //   const SearchScreen(),
-  //   const CartScreen(),
-  //   const ProfileScreen(),
-  // ];
+  var currentPage = 0;
 
   @override
   Widget build(BuildContext context) {
