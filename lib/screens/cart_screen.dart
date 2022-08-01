@@ -158,7 +158,7 @@ class _CartScreenState extends State<CartScreen> {
                   ),
                 ),
                 const SizedBox(
-                  height: 15,
+                  height: 25,
                 ),
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 80),

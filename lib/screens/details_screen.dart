@@ -5,7 +5,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:my_food_ordering_app/helpers/styles.dart';
+import 'package:my_food_ordering_app/screens/cart_screen.dart';
 import 'package:my_food_ordering_app/widgets/title.dart';
+import 'package:get/get.dart';
 
 // ignore: must_be_immutable
 class DetailsScreen extends StatefulWidget {
@@ -76,7 +78,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
                         child: Stack(
                           children: [
                             IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Get.to(() => const CartScreen());
+                              },
                               icon: const Icon(
                                 Icons.shopping_bag_outlined,
                                 color: white,
@@ -86,27 +90,42 @@ class _DetailsScreenState extends State<DetailsScreen> {
                             Positioned(
                               top: 8,
                               right: 7,
-                              child: Container(
-                                padding: const EdgeInsets.only(
-                                    right: 3, left: 3, top: 1, bottom: 1),
-                                decoration: BoxDecoration(
-                                  color: white,
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                      color: grey,
-                                      offset: Offset(2, 1),
-                                      blurRadius: 3,
-                                    ),
-                                  ],
-                                ),
-                                child: const TitleWidget(
-                                  text: "2",
-                                  size: 16,
-                                  colors: red,
-                                  weight: FontWeight.normal,
-                                ),
-                              ),
+                              child: StreamBuilder(
+                                  stream: FirebaseFirestore.instance
+                                      .collection("Cart")
+                                      .doc(FirebaseAuth
+                                          .instance.currentUser!.email)
+                                      .collection("cart-items")
+                                      .snapshots(),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                                    if (!snapshot.hasData) {
+                                      return const Center(
+                                        child: Text(""),
+                                      );
+                                    }
+                                    return Container(
+                                      padding: const EdgeInsets.only(
+                                          right: 3, left: 3, top: 1, bottom: 1),
+                                      decoration: BoxDecoration(
+                                        color: white,
+                                        borderRadius: BorderRadius.circular(10),
+                                        boxShadow: const [
+                                          BoxShadow(
+                                            color: grey,
+                                            offset: Offset(2, 1),
+                                            blurRadius: 3,
+                                          ),
+                                        ],
+                                      ),
+                                      child: TitleWidget(
+                                        text: "${snapshot.data!.docs.length}",
+                                        size: 16,
+                                        colors: red,
+                                        weight: FontWeight.normal,
+                                      ),
+                                    );
+                                  }),
                             ),
                           ],
                         ),
